@@ -1,0 +1,24 @@
+use clap::{Parser, Subcommand};
+
+mod cmds;
+mod utils;
+
+#[derive(Parser)]
+#[command(name = "booqer", version)]
+pub struct Cli {
+    #[command(subcommand)]
+    command: Command,
+}
+
+#[derive(Subcommand)]
+pub enum Command {
+    Upload { path: String },
+}
+
+pub fn run() -> anyhow::Result<()> {
+    let cli = Cli::parse();
+
+    match cli.command {
+        Command::Upload { path } => cmds::upload::handle_upload(path),
+    }
+}
