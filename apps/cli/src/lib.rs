@@ -15,10 +15,10 @@ pub enum Command {
     Upload { path: String },
 }
 
-pub fn run() -> anyhow::Result<()> {
+pub async fn run() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
-        Command::Upload { path } => cmds::upload::handle_upload(path),
+        Command::Upload { path } => cmds::upload::handle_upload(path).await,
     }
 }
