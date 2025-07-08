@@ -41,8 +41,6 @@ Return your result in strict JSON format.";
         .as_ref()
         .ok_or_else(|| anyhow::anyhow!("No response from GPT"))?;
 
-    println!("GPT Response: {}", raw);
-
     let metadata: BookMetadata = serde_json::from_str(raw)?;
     Ok(metadata)
 }

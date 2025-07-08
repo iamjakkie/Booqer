@@ -36,6 +36,7 @@ pub fn infer_metadata(text: &str, page_count: u32) -> BookMetadata {
     }
 
     BookMetadata {
+        id: String::new(),
         title,
         authors,
         isbn,
