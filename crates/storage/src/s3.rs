@@ -8,12 +8,12 @@ const BUCKET: &str = "booqer";
 const PREFIX: &str = "books/";
 
 /// Blocking wrapper for CLI use
-pub fn upload_to_s3(path: &Path) -> Result<String> {
+pub fn upload_to_s3(path: &Path) -> Result<(String, String)> {
     let rt = tokio::runtime::Runtime::new()?;
     rt.block_on(upload_to_s3_async(path))
 }
 
-async fn upload_to_s3_async(path: &Path) -> Result<String> {
+async fn upload_to_s3_async(path: &Path) -> Result<(String, String)> {
     // Hash file contents
     let mut reader = BufReader::new(File::open(path)?);
     let mut hasher = Sha256::new();
@@ -39,5 +39,5 @@ async fn upload_to_s3_async(path: &Path) -> Result<String> {
         .send()
         .await?;
 
-    Ok(format!("s3://{}/{}", BUCKET, key))
+    Ok((key.clone(), format!("s3://{}/{}", BUCKET, key)))
 }
