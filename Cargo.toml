@@ -3,9 +3,5 @@ members = [
     "apps/backend",
     "apps/cli",
     "apps/frontend",
-    "crates/common",
-    "crates/metadata",
-    "crates/storage",
-    "crates/extraction",
-    "crates/ai",
+    "crates/core",
 ]

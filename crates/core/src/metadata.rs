@@ -5,7 +5,8 @@ use async_openai::types::{
 };
 use async_openai::Client;
 use anyhow::Result;
-use common::BookMetadata;
+
+use crate::models::BookMetadata;
 
 pub async fn infer_metadata(text: &str) -> Result<BookMetadata> {
     let system_prompt = "You are a PDF metadata extraction agent. Extract the following metadata fields:

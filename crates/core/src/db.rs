@@ -1,5 +1,6 @@
-use common::BookMetadata;
 use sqlx::{PgPool};
+
+use crate::models::BookMetadata;
 
 pub async fn insert_book(pool: &PgPool, book: &BookMetadata) -> Result<(), sqlx::Error> {
     sqlx::query!(
