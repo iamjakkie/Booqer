@@ -25,4 +25,4 @@ target
 
 /target
 *.pdf
-apps/cli/src/cmds/upload.rs
+.env
