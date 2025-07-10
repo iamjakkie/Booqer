@@ -4,16 +4,7 @@ use aws_sdk_s3::{primitives::ByteStream, Client};
 use sha2::{Sha256, Digest};
 use hex::encode;
 
-const BUCKET: &str = "booqer";
-const PREFIX: &str = "books/";
-
-/// Blocking wrapper for CLI use
-pub fn upload_to_s3(path: &Path) -> Result<(String, String)> {
-    let rt = tokio::runtime::Runtime::new()?;
-    rt.block_on(upload_to_s3_async(path))
-}
-
-async fn upload_to_s3_async(path: &Path) -> Result<(String, String)> {
+pub async fn upload_to_s3_async(path: &Path, bucket: &str, prefix: &str) -> Result<(String, String)> {
     // Hash file contents
     let mut reader = BufReader::new(File::open(path)?);
     let mut hasher = Sha256::new();
@@ -24,7 +15,7 @@ async fn upload_to_s3_async(path: &Path) -> Result<(String, String)> {
         hasher.update(&buf[..n]);
     }
     let hash = encode(hasher.finalize());
-    let key = format!("{PREFIX}{hash}.pdf");
+    let key = format!("{prefix}{hash}.pdf");
 
     // Upload to S3 using AWS SDK
     let config = aws_config::load_from_env().await;
@@ -33,11 +24,11 @@ async fn upload_to_s3_async(path: &Path) -> Result<(String, String)> {
     let body = ByteStream::from_path(path.to_path_buf()).await?;
 
     client.put_object()
-        .bucket(BUCKET)
+        .bucket(bucket)
         .key(&key)
         .body(body)
         .send()
         .await?;
 
-    Ok((key.clone(), format!("s3://{}/{}", BUCKET, key)))
+    Ok((key.clone(), format!("s3://{}/{}", bucket, key)))
 }

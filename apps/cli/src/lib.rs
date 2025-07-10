@@ -16,9 +16,11 @@ pub enum Command {
 }
 
 pub async fn run() -> anyhow::Result<()> {
+    let ctx = core::AppContext::new(core::AppConfig::load()?)
+        .await?;
     let cli = Cli::parse();
 
     match cli.command {
-        Command::Upload { path } => cmds::upload::handle_upload(path).await,
+        Command::Upload { path } => cmds::upload::handle_upload(&ctx, path).await,
     }
 }
